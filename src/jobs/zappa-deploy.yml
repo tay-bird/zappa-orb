@@ -1,8 +1,13 @@
+description: >
+  Deploy a new Zappa stage or update an existing one.
+
 executor: default
 parameters:
   stage:
     type: string
     default: "dev"
+    description: > 
+      The name of the Zappa stage to update or deploy to.
 
 steps:
   - checkout
