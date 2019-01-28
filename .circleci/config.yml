@@ -11,8 +11,6 @@ workflows:
 
       - orb-tools/pack:
           name: pack
-          attach-workspace: true
-          checkout: false
           requires:
             - lint
 
