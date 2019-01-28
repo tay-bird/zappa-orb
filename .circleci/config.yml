@@ -1,0 +1,33 @@
+version: 2.1
+
+orbs:
+  orb-tools: circleci/orb-tools
+
+workflows:
+  lint_pack-validate_publish-dev:
+    jobs:
+      - orb-tools/lint:
+          name: lint
+
+      - orb-tools/pack:
+          name: pack
+          attach-workspace: true
+          checkout: false
+          source-dir: src
+          destination-orb-path: orb.yml
+          workspace-path: orb.yml
+          artifact-path: orb.yml
+          requires:
+            - lint
+
+      - orb-tools/publish:
+          name: publish
+          attach-workspace: true
+          checkout: false
+          orb-name: borb/zappa
+          orb-ref: "borb/zappa@dev:${CIRCLE_BRANCH}"
+          publish-token-variable: "$CIRCLECI_API_TOKEN"
+          requires:
+            - pack
+
+

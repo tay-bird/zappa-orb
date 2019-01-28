@@ -1,0 +1,7 @@
+resource_class: small
+parameters:
+  version:
+    type: "string"
+    default: "2.7"
+docker:
+  - image: circleci/python:<<parameters.version>>

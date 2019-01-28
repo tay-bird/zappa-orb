@@ -1,0 +1,3 @@
+resource_class: small
+docker:
+  - image: circleci/python:2.7
