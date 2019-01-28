@@ -1,12 +1,11 @@
-zappa-deploy:
-  executor: default
-  parameters:
-    stage:
-      type: string
-      default: "dev"
+executor: default
+parameters:
+  stage:
+    type: string
+    default: "dev"
 
-  steps:
-    - checkout
-    - run: pipenv install
-    - deploy-or-update:
-        stage: << parameters.stage >>
+steps:
+  - checkout
+  - run: pipenv install
+  - deploy-or-update:
+      stage: << parameters.stage >>
