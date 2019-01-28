@@ -13,10 +13,6 @@ workflows:
           name: pack
           attach-workspace: true
           checkout: false
-          source-dir: src
-          destination-orb-path: orb.yml
-          workspace-path: orb.yml
-          artifact-path: orb.yml
           requires:
             - lint
 
@@ -24,9 +20,7 @@ workflows:
           name: publish
           attach-workspace: true
           checkout: false
-          orb-name: borb/zappa
           orb-ref: "borb/zappa@dev:${CIRCLE_BRANCH}"
-          publish-token-variable: "$CIRCLECI_API_TOKEN"
           requires:
             - pack
 
