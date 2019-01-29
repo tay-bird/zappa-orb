@@ -29,3 +29,7 @@ https://<random_id>.execute-api.<aws_region>.amazonaws.com/dev
 ```
 
 For a complete example, see [tay-bird/zappa-circle-demo](https://github.com/tay-bird/zappa-circle-demo "tay-bird/zappa-circle-demo").
+
+## Documentation
+
+For more information about how to use this Orb, please see the [borb/zappa](https://circleci.com/orbs/registry/orb/borb/zappa "borb/zappa") docs.
