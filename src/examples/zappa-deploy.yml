@@ -7,9 +7,11 @@ usage:
   orbs:
     zappa: borb/zappa@dev:master
 
-  jobs:
-    zappa/zappa-deploy:
-      stage: "dev"
-      filters:
-        branches:
-          only: master
+  workflows:
+    deploy:
+      jobs:
+        - zappa/zappa-deploy:
+            stage: "dev"
+            filters:
+              branches:
+                only: master
