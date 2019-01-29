@@ -1,0 +1,15 @@
+description: >
+  Deploy the master branch to the Zappa 'dev' stage.
+
+usage:
+  version: 2.1
+
+  orbs:
+    zappa: borb/zappa@dev:master
+
+  jobs:
+    - zappa/zappa-deploy:
+        stage: "dev"
+        filters:
+          branches:
+            only: master
