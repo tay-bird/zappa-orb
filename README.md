@@ -28,4 +28,4 @@ Push your changes to master and check your build output. Your tutorial app shoul
 https://<random_id>.execute-api.<aws_region>.amazonaws.com/dev
 ```
 
-For a complete example, see https://github.com/tay-bird/zappa-circle-demo.
+For a complete example, see [tay-bird/zappa-circle-demo](https://github.com/tay-bird/zappa-circle-demo "tay-bird/zappa-circle-demo").
