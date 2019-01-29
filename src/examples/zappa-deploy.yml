@@ -8,8 +8,8 @@ usage:
     zappa: borb/zappa@dev:master
 
   jobs:
-    - zappa/zappa-deploy:
-        stage: "dev"
-        filters:
-          branches:
-            only: master
+    zappa/zappa-deploy:
+      stage: "dev"
+      filters:
+        branches:
+          only: master
