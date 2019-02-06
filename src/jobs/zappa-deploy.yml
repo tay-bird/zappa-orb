@@ -8,6 +8,15 @@ parameters:
     default: "dev"
     description: >
       The name of the Zappa stage to update or deploy to.
+  python_version:
+    type: string
+    default: "2.7"
+    description: >
+      The version of Python to deploy with.
+
+executor:
+  name: python
+  version: << parameters.python_version >>
 
 steps:
   - checkout
