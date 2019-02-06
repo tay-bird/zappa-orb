@@ -17,6 +17,7 @@ orbs:
 jobs:
   - zappa/zappa-deploy:
       stage: "dev"
+      python_version: "3.6"
       filters:
         branches:
           only: master

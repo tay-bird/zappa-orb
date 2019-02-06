@@ -1,7 +1,6 @@
 description: >
   Deploy a new Zappa stage or update an existing one.
 
-executor: default
 parameters:
   stage:
     type: string
