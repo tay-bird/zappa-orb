@@ -7,7 +7,7 @@ orbs:
 jobs:
   run_tests:
     docker:
-      - image: cli/default
+      - image: circleci-cli/default
     steps:
       - checkout
       - run: pipenv install --dev
