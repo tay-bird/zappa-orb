@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  zappa: "borb/zappa@volatile"
+  zappa: "borb/zappa@dev:test-channel"
 
 workflows:
   deploy-demo:

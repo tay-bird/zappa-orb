@@ -35,7 +35,15 @@ workflows:
             - lint
 
       - orb-tools/publish:
-          name: publish
+          name: publish-test-channel
+          attach-workspace: true
+          checkout: false
+          orb-ref: "borb/zappa@dev:test-channel"
+          requires:
+            - pack
+
+      - orb-tools/publish:
+          name: publish-branch-channel
           attach-workspace: true
           checkout: false
           orb-ref: "borb/zappa@dev:${CIRCLE_BRANCH}"
@@ -45,4 +53,4 @@ workflows:
       - run_tests:
           name: "Compile test manifests and run tests"
           requires:
-            - publish
+            - publish-test-channel
