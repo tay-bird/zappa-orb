@@ -4,7 +4,7 @@ orbs:
   cli: circleci/circleci-cli@0.1.2
   orb-tools: circleci/orb-tools@7
 
-command:
+commands:
   prepare_test:
     parameters:
       case:
