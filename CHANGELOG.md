@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New commands: `zappa/deploy` and `zappa/update`
 - New parameter for the `zappa-deploy` job: `update_only`
 
+### Changed
+- Steps no longer generate run commands with trailing newlines
+
 ## [0.0.3] - 2019-02-05
 ### Added
 - New parameter for the `zappa-deploy` job: `python_version`
