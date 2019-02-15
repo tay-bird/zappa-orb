@@ -5,8 +5,8 @@ orbs:
 
 jobs:
   run_tests:
-    executor:
-      name: circleci/python:3.6.6
+    docker:
+      - image: circleci/python:3.6.6
     steps:
       - checkout
       - run: pipenv install
