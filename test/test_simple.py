@@ -1,4 +1,3 @@
-from pprint import pprint as pp
 import os
 import unittest
 
@@ -10,7 +9,6 @@ class TestSimple(unittest.TestCase):
     def setUp(self):
         with open("simple.yml") as f:
             self.config = yaml.load(f)
-            pp(self.config)
 
     def test_high_level_keys_are_correct(self):
        actual_keys = self.config.keys()
