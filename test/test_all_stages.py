@@ -14,14 +14,15 @@ class TestAllStages(unittest.TestCase):
     def test_all_stages_false_deploys_to_one_stage(self):
         job = self.config['jobs']['zappa-deploy-all_stages-false']
         actual_step = job['steps'][2]['run']['command']
+        pp(actual_step)
         expected_step = (
             'set +e\n'
-            'STATUS=$(pipenv run zappa status borb -j 2>&1)\n'
+            'STATUS=$(pipenv run zappa status dev -j 2>&1)\n'
             'set -e\n'
             'if [[ $(echo $STATUS | jq . 2>/dev/null) ]];\n'
-            'then pipenv run zappa update borb;\n'
+            'then pipenv run zappa update dev;\n'
             'elif [[ "$STATUS" == *"have you deployed yet?" ]];\n'
-            'then pipenv run zappa deploy borb;\n'
+            'then pipenv run zappa deploy dev;\n'
             'else echo "$STATUS\\nUnknown error!" && exit 1\n'
             'fi')
 
