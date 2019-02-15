@@ -6,8 +6,7 @@ orbs:
 jobs:
   run_tests:
     executor:
-      name: zappa/python
-      version: "3.6.6"
+      name: circleci/python:3.6.6
     steps:
       - checkout
       - run: pipenv install
