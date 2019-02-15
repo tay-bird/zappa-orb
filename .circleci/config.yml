@@ -10,7 +10,7 @@ commands:
       case:
         type: string
     steps:
-      - run: 
+      - run:
           name: Prepare test case << parameters.case >>
           command: |-
             circleci config process
