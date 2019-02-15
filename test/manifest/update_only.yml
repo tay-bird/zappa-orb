@@ -1,0 +1,21 @@
+version: 2.1
+
+orbs:
+  zappa: "borb/zappa@volatile"
+
+workflows:
+  test-workflow:
+    jobs:
+      - zappa/zappa-deploy:
+          name: "zappa-deploy-update_only-true"
+          stage: borb
+          update_only: true
+
+      - zappa/zappa-deploy:
+          name: "zappa-deploy-update_only-false"
+          stage: borb
+          update_only: false
+
+      - zappa/zappa-deploy:
+          name: "zappa-deploy-update_only-absent"
+          stage: borb
