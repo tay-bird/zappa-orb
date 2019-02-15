@@ -1,0 +1,10 @@
+version: 2.1
+
+orbs:
+  zappa: "borb/zappa@volatile"
+
+workflows:
+  deploy-demo:
+    jobs:
+      - zappa/zappa-deploy:
+          stage: borb
