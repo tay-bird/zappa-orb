@@ -1,4 +1,3 @@
-from pprint import pprint as pp
 import os
 import unittest
 
@@ -14,7 +13,6 @@ class TestAllStages(unittest.TestCase):
     def test_all_stages_false_deploys_to_one_stage(self):
         job = self.config['jobs']['zappa-deploy-all_stages-false']
         actual_step = job['steps'][2]['run']['command']
-        pp(actual_step)
         expected_step = (
             'set +e\n'
             'STATUS=$(pipenv run zappa status dev -j 2>&1)\n'
@@ -31,7 +29,6 @@ class TestAllStages(unittest.TestCase):
     def test_all_stages_true_deploys_to_one_stage(self):
         job = self.config['jobs']['zappa-deploy-all_stages-true']
         actual_step = job['steps'][2]['run']['command']
-        pp(actual_step)
         expected_step = (
             'set +e\n'
             'STATUS=$(pipenv run zappa status --all -j 2>&1 >/dev/null)\n'
