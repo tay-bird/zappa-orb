@@ -54,7 +54,8 @@ steps:
               elif [[ "$NEW_DEPLOYMENT_COUNT" == "$TOTAL_DEPLOYMENT_COUNT" ]]
                 then pipenv run zappa deploy --all
               elif [ "$NEW_DEPLOYMENT_COUNT" -gt "0" ]
-                for DEPLOYMENT_NAME in $NEW_DEPLOYMENTS do
+                then for DEPLOYMENT_NAME in $NEW_DEPLOYMENTS
+                  do
                   STAGE=$(echo $DEPLOYMENT_NAME | awk -F- '{print $NF}')
                   pipenv run zappa deploy $STAGE
                 done
