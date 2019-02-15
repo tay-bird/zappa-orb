@@ -1,4 +1,3 @@
-from pprint import pprint as pp
 import os
 import unittest
 
@@ -10,7 +9,6 @@ class TestSimple(unittest.TestCase):
     def setUp(self):
         with open("simple.yml") as f:
             self.config = yaml.load(f)
-            pp(self.config)
 
     def test_high_level_keys_are_correct(self):
        actual_keys = self.config.keys()
@@ -54,6 +52,6 @@ class TestSimple(unittest.TestCase):
             'elif [[ "$STATUS" == *"have you deployed yet?" ]];\n'
             'then pipenv run zappa deploy borb;\n'
             'else echo "$STATUS\\nUnknown error!" && exit 1\n'
-            'fi\n')
+            'fi')
 
         self.assertTrue(expected_step == actual_step)

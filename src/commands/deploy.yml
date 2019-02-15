@@ -1,0 +1,15 @@
+description: >
+  Deploy a new Zappa stage.
+
+parameters:
+  stage:
+    type: string
+    default: "dev"
+    description: >
+      The name of the Zappa stage to deploy to.
+
+steps:
+  - run:
+      name: Deploying to << parameters.stage >>
+      command: |-
+         pipenv run zappa deploy << parameters.stage >>

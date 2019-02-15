@@ -12,6 +12,11 @@ parameters:
     default: "2.7"
     description: >
       The version of Python to deploy with.
+  update_only:
+    type: boolean
+    default: false
+    description: >
+      Whether to disallow a new stage being deployed.
 
 executor:
   name: python
@@ -20,5 +25,13 @@ executor:
 steps:
   - checkout
   - run: pipenv install
-  - deploy-or-update:
-      stage: << parameters.stage >>
+  - unless:
+      condition: << parameters.update_only >>
+      steps:
+        - deploy-or-update:
+            stage: << parameters.stage >>
+  - when:
+      condition: << parameters.update_only >>
+      steps:
+        - update:
+            stage: << parameters.stage >>
