@@ -32,7 +32,7 @@ class TestUpdateOnly(unittest.TestCase):
 
         pp(actual_step)
 
-        expected_step = 'pipenv run zappa deploy borb'
+        expected_step = 'pipenv run zappa update borb'
 
         self.assertTrue(expected_step == actual_step)
 
