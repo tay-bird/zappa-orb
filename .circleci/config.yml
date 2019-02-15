@@ -7,8 +7,9 @@ orbs:
 jobs:
   run_tests:
     docker:
-      - image: circleci-cli/default
+      - image: circleci/python:3.6
     steps:
+      - cli/install
       - checkout
       - run: pipenv install --dev
       - run: circleci config process test/manifest/simple.yml > simple.yml
