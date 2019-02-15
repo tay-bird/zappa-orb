@@ -1,15 +1,15 @@
 version: 2.1
 
 orbs:
+  cli: circleci/circleci-cli@0.1.2
   orb-tools: circleci/orb-tools@7
 
 jobs:
   run_tests:
     docker:
-      - image: circleci/python:3.6.6
+      - image: cli/default
     steps:
       - checkout
-      - run: "curl -fLSs https://circle.ci/cli | bash"
       - run: pipenv install --dev
       - run: circleci config process test/manifest/simple.yml > simple.yml
       - run: circleci config process test/manifest/executor.yml > executor.yml
