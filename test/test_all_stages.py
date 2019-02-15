@@ -45,8 +45,8 @@ class TestAllStages(unittest.TestCase):
             'set -e\n'
             'if [[ "$STATUS_EXIT_CODE" != "0" ]] then\n'
             '  echo "$STATUS\\nUnknown error!" && exit 1\n'
-            'elif [ "$NEW_DEPLOYMENT_COUNT" == "$TOTAL_DEPLOYMENT_COUNT" ]\n'
-            '  then pipenv run zappa deploy --all\n'
+            'elif [[ "$NEW_DEPLOYMENT_COUNT" == "$TOTAL_DEPLOYMENT_COUNT" ]]\n'
+            '  pipenv run zappa deploy --all\n'
             'elif [ "$NEW_DEPLOYMENT_COUNT" -gt "0" ]\n'
             '  for DEPLOYMENT_NAME in $NEW_DEPLOYMENTS do\n'
             "    STAGE=$(echo $DEPLOYMENT_NAME | awk -F- '{print $NF}')\n"
