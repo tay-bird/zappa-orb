@@ -9,7 +9,7 @@ jobs:
       - image: circleci/python:3.6.6
     steps:
       - checkout
-      - run: circleci update && circleci switch
+      - run: "curl -fLSs https://circle.ci/cli | bash"
       - run: pipenv install --dev
       - run: circleci config process test/manifest/simple.yml > simple.yml
       - run: circleci config process test/manifest/executor.yml > executor.yml
