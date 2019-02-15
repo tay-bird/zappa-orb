@@ -2,6 +2,11 @@ description: >
   Deploy a new Zappa stage.
 
 parameters:
+  all_stages:
+    type: boolean
+    default: false
+    description: >
+      Whether to deploy to all stages in the settings file.
   stage:
     type: string
     default: "dev"
@@ -9,7 +14,18 @@ parameters:
       The name of the Zappa stage to deploy to.
 
 steps:
-  - run:
-      name: Deploying to << parameters.stage >>
-      command: |-
-         pipenv run zappa deploy << parameters.stage >>
+  - unless:
+      condition: << parameters.all_stages >>
+      steps:
+        - run:
+            name: Deploying to << parameters.stage >>
+            command: |-
+               pipenv run zappa deploy << parameters.stage >>
+
+  - when:
+      condition: << parameters.all_stages >>
+      steps:
+        - run:
+            name: Deploying to all stages
+            command: |-
+               pipenv run zappa deploy --all

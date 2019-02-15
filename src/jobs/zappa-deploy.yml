@@ -2,6 +2,11 @@ description: >
   Deploy a new Zappa stage or update an existing one.
 
 parameters:
+  all_stages:
+    type: boolean
+    default: false
+    description: >
+      Whether to deploy to all stages in the settings file.
   stage:
     type: string
     default: "dev"
@@ -29,9 +34,11 @@ steps:
       condition: << parameters.update_only >>
       steps:
         - deploy-or-update:
+            all_stages: << parameters.all_stages >>
             stage: << parameters.stage >>
   - when:
       condition: << parameters.update_only >>
       steps:
         - update:
+            all_stages: << parameters.all_stages >>
             stage: << parameters.stage >>

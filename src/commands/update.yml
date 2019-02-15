@@ -2,6 +2,11 @@ description: >
   Update an existing Zappa stage.
 
 parameters:
+  all_stages:
+    type: boolean
+    default: false
+    description: >
+      Whether to deploy to all stages in the settings file.
   stage:
     type: string
     default: "dev"
@@ -9,7 +14,18 @@ parameters:
       The name of the Zappa stage to update.
 
 steps:
-  - run:
-      name: Deploying update to << parameters.stage >>
-      command: |-
-        pipenv run zappa update << parameters.stage >>
+  - unless:
+      condition: << parameters.all_stages >>
+      steps:
+        - run:
+            name: Deploying update to << parameters.stage >>
+            command: |-
+              pipenv run zappa update << parameters.stage >>
+
+  - when:
+      condition: << parameters.all_stages >>
+      steps:
+        - run:
+            name: Deploying update to all stages
+            command: |-
+              pipenv run zappa update --all
