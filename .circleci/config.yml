@@ -1,7 +1,24 @@
 version: 2.1
 
 orbs:
+  cli: circleci/circleci-cli@0.1.2
   orb-tools: circleci/orb-tools@7
+
+jobs:
+  run_tests:
+    docker:
+      - image: circleci/python:3.6
+    steps:
+      - cli/install
+      - checkout
+      - run: pipenv install --dev
+      - run: circleci config process test/manifest/simple.yml > simple.yml
+      - run: circleci config process test/manifest/executor.yml > executor.yml
+      - store_artifacts:
+          path: simple.yml
+      - store_artifacts:
+          path: executor.yml
+      - run: pipenv run python -m unittest test
 
 workflows:
   lint_pack-validate_publish-dev:
@@ -21,3 +38,8 @@ workflows:
           orb-ref: "borb/zappa@dev:${CIRCLE_BRANCH}"
           requires:
             - pack
+
+      - run_tests:
+          name: "Compile test manifests and run tests"
+          requires:
+            - publish
