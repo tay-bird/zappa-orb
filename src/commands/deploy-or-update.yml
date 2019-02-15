@@ -11,7 +11,7 @@ parameters:
 steps:
   - run:
       name: Deploying to << parameters.stage >>
-      command: |
+      command: |-
         set +e
         STATUS=$(pipenv run zappa status << parameters.stage >> -j 2>&1)
         set -e

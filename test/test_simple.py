@@ -52,6 +52,6 @@ class TestSimple(unittest.TestCase):
             'elif [[ "$STATUS" == *"have you deployed yet?" ]];\n'
             'then pipenv run zappa deploy borb;\n'
             'else echo "$STATUS\\nUnknown error!" && exit 1\n'
-            'fi\n')
+            'fi')
 
         self.assertTrue(expected_step == actual_step)

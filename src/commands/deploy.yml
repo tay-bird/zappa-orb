@@ -11,5 +11,5 @@ parameters:
 steps:
   - run:
       name: Deploying to << parameters.stage >>
-      command: |
+      command: |-
          pipenv run zappa deploy << parameters.stage >>

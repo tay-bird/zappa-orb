@@ -1,4 +1,5 @@
 import os
+from pprint import pprint as pp
 import unittest
 
 import yaml
@@ -28,6 +29,9 @@ class TestUpdateOnly(unittest.TestCase):
     def test_update_only_true_performs_update_only(self):
         job = self.config['jobs']['zappa-deploy-update_only-true']
         actual_step = job['steps'][2]['run']['command']
+
+        pp(actual_step)
+
         expected_step = 'pipenv run zappa deploy borb'
 
         self.assertTrue(expected_step == actual_step)
@@ -44,7 +48,7 @@ class TestUpdateOnly(unittest.TestCase):
             'elif [[ "$STATUS" == *"have you deployed yet?" ]];\n'
             'then pipenv run zappa deploy borb;\n'
             'else echo "$STATUS\\nUnknown error!" && exit 1\n'
-            'fi\n')
+            'fi')
 
         self.assertTrue(expected_step == actual_step)
 
@@ -60,6 +64,6 @@ class TestUpdateOnly(unittest.TestCase):
             'elif [[ "$STATUS" == *"have you deployed yet?" ]];\n'
             'then pipenv run zappa deploy borb;\n'
             'else echo "$STATUS\\nUnknown error!" && exit 1\n'
-            'fi\n')
+            'fi')
 
         self.assertTrue(expected_step == actual_step)
