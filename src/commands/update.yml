@@ -1,0 +1,15 @@
+description: >
+  Update an existing Zappa stage.
+
+parameters:
+  stage:
+    type: string
+    default: "dev"
+    description: >
+      The name of the Zappa stage to update.
+
+steps:
+  - run:
+      name: Deploying update to << parameters.stage >>
+      command: |-
+        pipenv run zappa update << parameters.stage >>

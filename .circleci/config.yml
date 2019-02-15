@@ -14,10 +14,13 @@ jobs:
       - run: pipenv install --dev
       - run: circleci config process test/manifest/simple.yml > simple.yml
       - run: circleci config process test/manifest/executor.yml > executor.yml
+      - run: circleci config process test/manifest/update_only.yml > update_only.yml
       - store_artifacts:
           path: simple.yml
       - store_artifacts:
           path: executor.yml
+      - store_artifacts:
+          path: update_only.yml
       - run: pipenv run python -m unittest test
 
 workflows:
@@ -32,7 +35,15 @@ workflows:
             - lint
 
       - orb-tools/publish:
-          name: publish
+          name: publish-test-channel
+          attach-workspace: true
+          checkout: false
+          orb-ref: "borb/zappa@dev:test-channel"
+          requires:
+            - pack
+
+      - orb-tools/publish:
+          name: publish-branch-channel
           attach-workspace: true
           checkout: false
           orb-ref: "borb/zappa@dev:${CIRCLE_BRANCH}"
@@ -42,4 +53,4 @@ workflows:
       - run_tests:
           name: "Compile test manifests and run tests"
           requires:
-            - publish
+            - publish-test-channel
