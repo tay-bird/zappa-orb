@@ -1,5 +1,4 @@
 import os
-from pprint import pprint as pp
 import unittest
 
 import yaml
@@ -10,7 +9,6 @@ class TestUpdateOnly(unittest.TestCase):
     def setUp(self):
         with open("update_only.yml") as f:
             self.config = yaml.load(f)
-            pp(self.config)
 
     def test_high_level_keys_are_correct(self):
        actual_keys = self.config.keys()
