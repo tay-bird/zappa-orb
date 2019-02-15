@@ -13,8 +13,7 @@ commands:
       - run:
           name: Prepare test case << parameters.case >>
           command: |-
-            circleci config process
-            test/manifest/<< parameters.case >>.yml > << parameters.case >>
+            circleci config process test/manifest/<< parameters.case >>.yml > << parameters.case >>
       - store_artifacts:
           path: << parameters.case >>.yml
 
