@@ -12,6 +12,10 @@ jobs:
       - run: pipenv install --dev
       - run: circleci config process test/manifest/simple.yml > simple.yml
       - run: circleci config process test/manifest/executor.yml > executor.yml
+      - store_artifacts:
+          path: simple.yml
+      - store_artifacts:
+          path: executor.yml
       - run: pipenv run python -m unittest test
 
 workflows:
