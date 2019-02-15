@@ -16,33 +16,41 @@ class TestUpdateOnly(unittest.TestCase):
 
        self.assertTrue(set(expected_keys) == set(actual_keys))
 
-    def test_job_is_present(self):
+    def test_jobs_are_present(self):
         actual_jobs = self.config['jobs'].keys()
-        expected_jobs = ['zappa/zappa-deploy']
+        expected_jobs = [
+            'zappa-deploy-update_only-true',
+            'zappa-deploy-update_only-false',
+            'zappa-deploy-update_only-absent']
 
         self.assertTrue(set(expected_jobs) == set(actual_jobs))
 
-    def test_job_uses_py27_image(self):
-        actual_images = [
-            docker_config['image']
-            for docker_config in self.config['jobs']['zappa/zappa-deploy']['docker']]
-        expected_images = ['circleci/python:2.7']
-
-        self.assertTrue(set(expected_images) == set(actual_images))
-
-    def test_job_contains_three_steps(self):
-        actual_steps = self.config['jobs']['zappa/zappa-deploy']['steps']
-
-        self.assertTrue(len(actual_steps) == 3)
-
-    def test_job_step_one_checks_out(self):
-        actual_step = self.config['jobs']['zappa/zappa-deploy']['steps'][0]
-        expected_step = 'checkout'
+    def test_update_only_true_performs_update_only(self):
+        job = self.config['jobs']['zappa-deploy-update_only-true']
+        actual_step = job['steps'][2]['run']['command']
+        expected_step = 'pipenv run zappa deploy borb'
 
         self.assertTrue(expected_step == actual_step)
 
-    def test_job_step_three_performs_create_or_update(self):
-        actual_step = self.config['jobs']['zappa/zappa-deploy']['steps'][2]['run']['command']
+    def test_update_only_false_performs_create_or_update(self):
+        job = self.config['jobs']['zappa-deploy-update_only-false']
+        actual_step = job['steps'][2]['run']['command']
+        expected_step = (
+            'set +e\n'
+            'STATUS=$(pipenv run zappa status borb -j 2>&1)\n'
+            'set -e\n'
+            'if [[ $(echo $STATUS | jq . 2>/dev/null) ]];\n'
+            'then pipenv run zappa update borb;\n'
+            'elif [[ "$STATUS" == *"have you deployed yet?" ]];\n'
+            'then pipenv run zappa deploy borb;\n'
+            'else echo "$STATUS\\nUnknown error!" && exit 1\n'
+            'fi\n')
+
+        self.assertTrue(expected_step == actual_step)
+
+    def test_update_only_absent_performs_create_or_update(self):
+        job = self.config['jobs']['zappa-deploy-update_only-absent']
+        actual_step = job['steps'][2]['run']['command']
         expected_step = (
             'set +e\n'
             'STATUS=$(pipenv run zappa status borb -j 2>&1)\n'
