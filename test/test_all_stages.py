@@ -15,7 +15,7 @@ class TestAllStages(unittest.TestCase):
         actual_step = job['steps'][2]['run']['command']
         expected_step = (
             'set +e\n'
-            'STATUS=$(pipenv run zappa status dev -j --settings_file zappa_settings.json 2>&1)\n'
+            'STATUS=$(pipenv run zappa status dev --json --settings_file zappa_settings.json 2>&1)\n'
             'set -e\n'
             'if [[ $(echo $STATUS | jq . 2>/dev/null) ]];\n'
             'then pipenv run zappa update dev --settings_file zappa_settings.json;\n'
@@ -31,7 +31,7 @@ class TestAllStages(unittest.TestCase):
         actual_step = job['steps'][2]['run']['command']
         expected_step = (
             'set +e\n'
-            'STATUS=$(pipenv run zappa status --all -j --settings_file zappa_settings.json 2>&1 >/dev/null)\n'
+            'STATUS=$(pipenv run zappa status --all --json --settings_file zappa_settings.json 2>&1 >/dev/null)\n'
             'ALL_DEPLOYMENTS=$(cat zappa_settings.json | jq -r \'. | keys | join(" ")\')\n'
             "NEW_DEPLOYMENTS=$(echo $STATUS | awk '{\n"
             "  if ( length($0)!=0 && $0 '\\!'~ /^Error: No Lambda.*deployed/ ) {\n"

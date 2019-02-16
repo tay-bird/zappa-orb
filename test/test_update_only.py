@@ -38,7 +38,7 @@ class TestUpdateOnly(unittest.TestCase):
         actual_step = job['steps'][2]['run']['command']
         expected_step = (
             'set +e\n'
-            'STATUS=$(pipenv run zappa status borb -j --settings_file zappa_settings.json 2>&1)\n'
+            'STATUS=$(pipenv run zappa status borb --json --settings_file zappa_settings.json 2>&1)\n'
             'set -e\n'
             'if [[ $(echo $STATUS | jq . 2>/dev/null) ]];\n'
             'then pipenv run zappa update borb --settings_file zappa_settings.json;\n'
@@ -54,7 +54,7 @@ class TestUpdateOnly(unittest.TestCase):
         actual_step = job['steps'][2]['run']['command']
         expected_step = (
             'set +e\n'
-            'STATUS=$(pipenv run zappa status borb -j --settings_file zappa_settings.json 2>&1)\n'
+            'STATUS=$(pipenv run zappa status borb --json --settings_file zappa_settings.json 2>&1)\n'
             'set -e\n'
             'if [[ $(echo $STATUS | jq . 2>/dev/null) ]];\n'
             'then pipenv run zappa update borb --settings_file zappa_settings.json;\n'
