@@ -34,5 +34,5 @@ steps:
         - run:
             name: Deploying to all stages
             command: |-
-              SETTINGS="--settings_file << parameters.settings_file >>" 
+              SETTINGS="--settings_file << parameters.settings_file >>"
               pipenv run zappa deploy --all $SETTINGS
