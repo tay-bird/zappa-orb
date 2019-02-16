@@ -34,7 +34,7 @@ class TestAllStages(unittest.TestCase):
             'STATUS=$(pipenv run zappa status --all -j 2>&1 >/dev/null)\n'
             'ALL_DEPLOYMENTS=$(cat zappa_settings.json | jq -r \'. | keys | join(" ")\')\n'
             "NEW_DEPLOYMENTS=$(echo $STATUS | awk '{\n"
-            "  if ( $0 '\\!'~ /^Error: No Lambda.*deployed/ ) {\n"
+            "  if ( length($0)!=0 && $0 '\\!'~ /^Error: No Lambda.*deployed/ ) {\n"
             '    exit 1\n'
             '  }\n'
             '  else print $4\n'

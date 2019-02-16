@@ -40,7 +40,7 @@ steps:
               STATUS=$(pipenv run zappa status --all -j 2>&1 >/dev/null)
               ALL_DEPLOYMENTS=$(cat zappa_settings.json | jq -r '. | keys | join(" ")')
               NEW_DEPLOYMENTS=$(echo $STATUS | awk '{
-                if ( $0 '\!'~ /^Error: No Lambda.*deployed/ ) {
+                if ( length($0)!=0 && $0 '\!'~ /^Error: No Lambda.*deployed/ ) {
                   exit 1
                 }
                 else print $4
