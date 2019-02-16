@@ -15,12 +15,13 @@ class TestAllStages(unittest.TestCase):
         actual_step = job['steps'][2]['run']['command']
         expected_step = (
             'set +e\n'
-            'STATUS=$(pipenv run zappa status dev -j 2>&1)\n'
+            'SETTINGS="--settings_file zappa_settings.json"\n'
+            'STATUS=$(pipenv run zappa status dev --json $SETTINGS 2>&1)\n'
             'set -e\n'
             'if [[ $(echo $STATUS | jq . 2>/dev/null) ]];\n'
-            'then pipenv run zappa update dev;\n'
+            'then pipenv run zappa update dev $SETTINGS;\n'
             'elif [[ "$STATUS" == *"have you deployed yet?" ]];\n'
-            'then pipenv run zappa deploy dev;\n'
+            'then pipenv run zappa deploy dev $SETTINGS;\n'
             'else echo "$STATUS\\nUnknown error!" && exit 1\n'
             'fi')
 
@@ -31,7 +32,8 @@ class TestAllStages(unittest.TestCase):
         actual_step = job['steps'][2]['run']['command']
         expected_step = (
             'set +e\n'
-            'STATUS=$(pipenv run zappa status --all -j 2>&1 >/dev/null)\n'
+            'SETTINGS="--settings_file zappa_settings.json"\n'
+            'STATUS=$(pipenv run zappa status --all --json $SETTINGS 2>&1 >/dev/null)\n'
             'ALL_DEPLOYMENTS=$(cat zappa_settings.json | jq -r \'. | keys | join(" ")\')\n'
             "NEW_DEPLOYMENTS=$(echo $STATUS | awk '{\n"
             "  if ( length($0)!=0 && $0 '\\!'~ /^Error: No Lambda.*deployed/ ) {\n"
@@ -46,14 +48,14 @@ class TestAllStages(unittest.TestCase):
             'if [[ "$STATUS_EXIT_CODE" != "0" ]]\n'
             '  then echo "$STATUS\\nUnknown error!" && exit 1\n'
             'elif [[ "$NEW_DEPLOYMENT_COUNT" == "$TOTAL_DEPLOYMENT_COUNT" ]]\n'
-            '  then pipenv run zappa deploy --all\n'
+            '  then pipenv run zappa deploy --all $SETTINGS\n'
             'elif [ "$NEW_DEPLOYMENT_COUNT" -gt "0" ]\n'
             '  then for DEPLOYMENT_NAME in $NEW_DEPLOYMENTS\n'
             '    do\n'
             "    STAGE=$(echo $DEPLOYMENT_NAME | awk -F- '{print $NF}')\n"
-            '    pipenv run zappa deploy $STAGE\n'
+            '    pipenv run zappa deploy $STAGE $SETTINGS\n'
             '  done\n'
             'fi\n'
-            'pipenv run zappa update --all')
+            'pipenv run zappa update --all $SETTINGS')
 
         self.assertTrue(expected_step == actual_step)

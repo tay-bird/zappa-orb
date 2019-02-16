@@ -7,6 +7,11 @@ parameters:
     default: false
     description: >
       Whether to deploy to all stages in the settings file.
+  settings_file:
+    type: string
+    default: "zappa_settings.json"
+    description: >
+      The path to the zappa settings file.
   stage:
     type: string
     default: "dev"
@@ -21,12 +26,13 @@ steps:
             name: Deploying to << parameters.stage >>
             command: |-
               set +e
-              STATUS=$(pipenv run zappa status << parameters.stage >> -j 2>&1)
+              SETTINGS="--settings_file << parameters.settings_file >>"
+              STATUS=$(pipenv run zappa status << parameters.stage >> --json $SETTINGS 2>&1)
               set -e
               if [[ $(echo $STATUS | jq . 2>/dev/null) ]];
-              then pipenv run zappa update << parameters.stage >>;
+              then pipenv run zappa update << parameters.stage >> $SETTINGS;
               elif [[ "$STATUS" == *"have you deployed yet?" ]];
-              then pipenv run zappa deploy << parameters.stage >>;
+              then pipenv run zappa deploy << parameters.stage >> $SETTINGS;
               else echo "$STATUS\nUnknown error!" && exit 1
               fi
 
@@ -37,8 +43,9 @@ steps:
             name: Deploying to all stages
             command: |-
               set +e
-              STATUS=$(pipenv run zappa status --all -j 2>&1 >/dev/null)
-              ALL_DEPLOYMENTS=$(cat zappa_settings.json | jq -r '. | keys | join(" ")')
+              SETTINGS="--settings_file << parameters.settings_file >>"
+              STATUS=$(pipenv run zappa status --all --json $SETTINGS 2>&1 >/dev/null)
+              ALL_DEPLOYMENTS=$(cat << parameters.settings_file >> | jq -r '. | keys | join(" ")')
               NEW_DEPLOYMENTS=$(echo $STATUS | awk '{
                 if ( length($0)!=0 && $0 '\!'~ /^Error: No Lambda.*deployed/ ) {
                   exit 1
@@ -52,12 +59,12 @@ steps:
               if [[ "$STATUS_EXIT_CODE" != "0" ]]
                 then echo "$STATUS\nUnknown error!" && exit 1
               elif [[ "$NEW_DEPLOYMENT_COUNT" == "$TOTAL_DEPLOYMENT_COUNT" ]]
-                then pipenv run zappa deploy --all
+                then pipenv run zappa deploy --all $SETTINGS
               elif [ "$NEW_DEPLOYMENT_COUNT" -gt "0" ]
                 then for DEPLOYMENT_NAME in $NEW_DEPLOYMENTS
                   do
                   STAGE=$(echo $DEPLOYMENT_NAME | awk -F- '{print $NF}')
-                  pipenv run zappa deploy $STAGE
+                  pipenv run zappa deploy $STAGE $SETTINGS
                 done
               fi
-              pipenv run zappa update --all
+              pipenv run zappa update --all $SETTINGS

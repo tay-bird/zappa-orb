@@ -1,3 +1,4 @@
+from pprint import pprint as pp
 import os
 import unittest
 
@@ -43,14 +44,16 @@ class TestSimple(unittest.TestCase):
 
     def test_job_step_three_performs_create_or_update(self):
         actual_step = self.config['jobs']['zappa/zappa-deploy']['steps'][2]['run']['command']
+        pp(actual_step)
         expected_step = (
             'set +e\n'
-            'STATUS=$(pipenv run zappa status borb -j 2>&1)\n'
+            'SETTINGS="--settings_file zappa_settings.json"\n'
+            'STATUS=$(pipenv run zappa status borb --json $SETTINGS 2>&1)\n'
             'set -e\n'
             'if [[ $(echo $STATUS | jq . 2>/dev/null) ]];\n'
-            'then pipenv run zappa update borb;\n'
+            'then pipenv run zappa update borb $SETTINGS;\n'
             'elif [[ "$STATUS" == *"have you deployed yet?" ]];\n'
-            'then pipenv run zappa deploy borb;\n'
+            'then pipenv run zappa deploy borb $SETTINGS;\n'
             'else echo "$STATUS\\nUnknown error!" && exit 1\n'
             'fi')
 

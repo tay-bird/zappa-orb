@@ -7,16 +7,21 @@ parameters:
     default: false
     description: >
       Whether to deploy to all stages in the settings file.
-  stage:
-    type: string
-    default: "dev"
-    description: >
-      The name of the Zappa stage to update or deploy to.
   python_version:
     type: string
     default: "2.7"
     description: >
       The version of Python to deploy with.
+  settings_file:
+    type: string
+    default: "zappa_settings.json"
+    description: >
+      The path to the zappa settings file.
+  stage:
+    type: string
+    default: "dev"
+    description: >
+      The name of the Zappa stage to update or deploy to.
   update_only:
     type: boolean
     default: false
@@ -35,10 +40,12 @@ steps:
       steps:
         - deploy-or-update:
             all_stages: << parameters.all_stages >>
+            settings_file: << parameters.settings_file >>
             stage: << parameters.stage >>
   - when:
       condition: << parameters.update_only >>
       steps:
         - update:
             all_stages: << parameters.all_stages >>
+            settings_file: << parameters.settings_file >>
             stage: << parameters.stage >>

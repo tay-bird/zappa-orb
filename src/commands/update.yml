@@ -7,6 +7,11 @@ parameters:
     default: false
     description: >
       Whether to deploy to all stages in the settings file.
+  settings_file:
+    type: string
+    default: "zappa_settings.json"
+    description: >
+      The path to the zappa settings file.
   stage:
     type: string
     default: "dev"
@@ -20,7 +25,8 @@ steps:
         - run:
             name: Deploying update to << parameters.stage >>
             command: |-
-              pipenv run zappa update << parameters.stage >>
+              SETTINGS="--settings_file << parameters.settings_file >>"
+              pipenv run zappa update << parameters.stage >> $SETTINGS
 
   - when:
       condition: << parameters.all_stages >>
@@ -28,4 +34,5 @@ steps:
         - run:
             name: Deploying update to all stages
             command: |-
-              pipenv run zappa update --all
+              SETTINGS="--settings_file << parameters.settings_file >>"
+              pipenv run zappa update --all $SETTINGS

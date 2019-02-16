@@ -29,7 +29,9 @@ class TestUpdateOnly(unittest.TestCase):
         job = self.config['jobs']['zappa-deploy-update_only-true']
         actual_step = job['steps'][2]['run']['command']
 
-        expected_step = 'pipenv run zappa update borb'
+        expected_step = (
+            'SETTINGS="--settings_file zappa_settings.json"\n'
+            'pipenv run zappa update borb $SETTINGS')
 
         self.assertTrue(expected_step == actual_step)
 
@@ -38,12 +40,13 @@ class TestUpdateOnly(unittest.TestCase):
         actual_step = job['steps'][2]['run']['command']
         expected_step = (
             'set +e\n'
-            'STATUS=$(pipenv run zappa status borb -j 2>&1)\n'
+            'SETTINGS="--settings_file zappa_settings.json"\n'
+            'STATUS=$(pipenv run zappa status borb --json $SETTINGS 2>&1)\n'
             'set -e\n'
             'if [[ $(echo $STATUS | jq . 2>/dev/null) ]];\n'
-            'then pipenv run zappa update borb;\n'
+            'then pipenv run zappa update borb $SETTINGS;\n'
             'elif [[ "$STATUS" == *"have you deployed yet?" ]];\n'
-            'then pipenv run zappa deploy borb;\n'
+            'then pipenv run zappa deploy borb $SETTINGS;\n'
             'else echo "$STATUS\\nUnknown error!" && exit 1\n'
             'fi')
 
@@ -54,12 +57,13 @@ class TestUpdateOnly(unittest.TestCase):
         actual_step = job['steps'][2]['run']['command']
         expected_step = (
             'set +e\n'
-            'STATUS=$(pipenv run zappa status borb -j 2>&1)\n'
+            'SETTINGS="--settings_file zappa_settings.json"\n'
+            'STATUS=$(pipenv run zappa status borb --json $SETTINGS 2>&1)\n'
             'set -e\n'
             'if [[ $(echo $STATUS | jq . 2>/dev/null) ]];\n'
-            'then pipenv run zappa update borb;\n'
+            'then pipenv run zappa update borb $SETTINGS;\n'
             'elif [[ "$STATUS" == *"have you deployed yet?" ]];\n'
-            'then pipenv run zappa deploy borb;\n'
+            'then pipenv run zappa deploy borb $SETTINGS;\n'
             'else echo "$STATUS\\nUnknown error!" && exit 1\n'
             'fi')
 
