@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - New commands: `zappa/deploy` and `zappa/update`
 - New parameter for the `zappa-deploy` job: `update_only`
+- New parameter for all steps and jobs: `all_stages`
 
 ### Changed
 - Steps no longer generate run commands with trailing newlines

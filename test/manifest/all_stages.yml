@@ -1,0 +1,14 @@
+version: 2.1
+
+orbs:
+  zappa: "borb/zappa@dev:test-channel"
+
+workflows:
+  test-workflow:
+    jobs:
+      - zappa/zappa-deploy:
+          name: "zappa-deploy-all_stages-false"
+          all_stages: false
+      - zappa/zappa-deploy:
+          name: "zappa-deploy-all_stages-true"
+          all_stages: true

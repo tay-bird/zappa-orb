@@ -4,6 +4,20 @@ orbs:
   cli: circleci/circleci-cli@0.1.2
   orb-tools: circleci/orb-tools@7
 
+commands:
+  prepare_test:
+    parameters:
+      case:
+        type: string
+    steps:
+      - run:
+          name: Prepare test case << parameters.case >>
+          command: |-
+            circleci config process \
+            test/manifest/<< parameters.case >>.yml > << parameters.case >>.yml
+      - store_artifacts:
+          path: << parameters.case >>.yml
+
 jobs:
   run_tests:
     docker:
@@ -12,15 +26,14 @@ jobs:
       - cli/install
       - checkout
       - run: pipenv install --dev
-      - run: circleci config process test/manifest/simple.yml > simple.yml
-      - run: circleci config process test/manifest/executor.yml > executor.yml
-      - run: circleci config process test/manifest/update_only.yml > update_only.yml
-      - store_artifacts:
-          path: simple.yml
-      - store_artifacts:
-          path: executor.yml
-      - store_artifacts:
-          path: update_only.yml
+      - prepare_test:
+          case: simple
+      - prepare_test:
+          case: executor
+      - prepare_test:
+          case: update_only
+      - prepare_test:
+          case: all_stages
       - run: pipenv run python -m unittest test
 
 workflows:
