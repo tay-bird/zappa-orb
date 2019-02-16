@@ -29,7 +29,9 @@ class TestUpdateOnly(unittest.TestCase):
         job = self.config['jobs']['zappa-deploy-update_only-true']
         actual_step = job['steps'][2]['run']['command']
 
-        expected_step = 'pipenv run zappa update borb $SETTINGS'
+        expected_step = (
+            'SETTINGS="--settings_file zappa_settings.json"\n'
+            'pipenv run zappa update borb $SETTINGS')
 
         self.assertTrue(expected_step == actual_step)
 
