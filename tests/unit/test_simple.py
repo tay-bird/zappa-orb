@@ -1,4 +1,3 @@
-from pprint import pprint as pp
 import os
 import unittest
 
@@ -44,7 +43,6 @@ class TestSimple(unittest.TestCase):
 
     def test_job_step_three_performs_create_or_update(self):
         actual_step = self.config['jobs']['zappa/zappa-deploy']['steps'][2]['run']['command']
-        pp(actual_step)
         expected_step = (
             'set +e\n'
             'SETTINGS="--settings_file zappa_settings.json"\n'
