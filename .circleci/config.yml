@@ -14,7 +14,7 @@ commands:
           name: Prepare test case << parameters.case >>
           command: |-
             circleci config process \
-            test/manifest/<< parameters.case >>.yml > << parameters.case >>.yml
+            tests/unit/manifest/<< parameters.case >>.yml > << parameters.case >>.yml
       - store_artifacts:
           path: << parameters.case >>.yml
 
@@ -34,7 +34,7 @@ jobs:
           case: update_only
       - prepare_test:
           case: all_stages
-      - run: pipenv run python -m unittest test
+      - run: pipenv run python -m unittest discover -s tests
 
 workflows:
   lint_pack-validate_publish-dev:
