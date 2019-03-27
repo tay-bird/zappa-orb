@@ -2,7 +2,14 @@ version: 2.1
 
 orbs:
   cli: circleci/circleci-cli@0.1.2
-  orb-tools: circleci/orb-tools@7
+  orb-tools: circleci/orb-tools@8.4.0
+  zappa: borb/zappa@dev:test-channel
+
+integration-filters: &integration-filters
+  branches:
+    ignore: /.*/
+  tags:
+    only: /integration-.*/
 
 commands:
   prepare_test:
@@ -19,7 +26,7 @@ commands:
           path: << parameters.case >>.yml
 
 jobs:
-  run_tests:
+  run-unit-tests:
     docker:
       - image: circleci/python:3.6
     steps:
@@ -37,7 +44,7 @@ jobs:
       - run: pipenv run python -m unittest discover -s tests
 
 workflows:
-  lint_pack-validate_publish-dev:
+  lint-pack-validate-publish-dev:
     jobs:
       - orb-tools/lint:
           name: lint
@@ -63,7 +70,31 @@ workflows:
           requires:
             - pack
 
-      - run_tests:
-          name: "Compile test manifests and run tests"
+      - run-unit-tests:
+          name: run-unit-tests
           requires:
             - publish-test-channel
+
+      - orb-tools/trigger-integration-workflow:
+          name: trigger-integration-workflow
+          ssh-fingerprints: "57:7b:eb:64:42:0c:30:9a:4d:12:29:57:0e:0e:13:3f"
+          cleanup-tags: true
+          requires:
+            - run-unit-tests
+
+  integration-tests:
+    jobs:
+      - zappa/zappa-deploy:
+          stage: dev
+          filters: *integration-filters
+          pre-steps:
+            - checkout
+            - run:
+                name: move-to-test-simple
+                command: "cd tests/integration/test_simple"
+            - run:
+                name: install-moto-interceptor
+                command: pipenv install
+            - run:
+                name: start-moto-interceptor
+                command: "nohup pipenv run moto-interceptor &"
