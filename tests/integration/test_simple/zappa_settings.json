@@ -1,6 +1,7 @@
 {
     "dev": {
         "app_function": "app.app",
+        "aws_region": "us-west-2",
         "project_name": "zappa-integration-test-simple",
         "runtime": "python3.6",
         "vpc_config": {"SubnetIds": [], "SecurityGroupIds": []}

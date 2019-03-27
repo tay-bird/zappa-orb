@@ -6,7 +6,7 @@ name = "pypi"
 
 [packages]
 flask = "*"
-moto-interceptor = {git="git://github.com/tay-bird/moto-interceptor, ref="master"}
+moto-interceptor = {git="git://github.com/tay-bird/moto-interceptor", ref="master"}
 zappa = "*"
 
 [requires]

@@ -5,6 +5,10 @@ orbs:
   orb-tools: circleci/orb-tools@8.4.0
   zappa: borb/zappa@dev:test-channel
 
+branch-filters: &branch-filters
+  tags:
+    ignore: /.*/
+
 integration-filters: &integration-filters
   branches:
     ignore: /.*/
@@ -26,6 +30,16 @@ commands:
           path: << parameters.case >>.yml
 
 jobs:
+  prepare-integration-workspace:
+    docker:
+      - image: circleci/python:3.7
+    steps:
+      - checkout
+      - persist_to_workspace:
+          root: "tests/integration/test_simple"
+          paths:
+            - "./*"
+
   run-unit-tests:
     docker:
       - image: circleci/python:3.7
@@ -48,9 +62,11 @@ workflows:
     jobs:
       - orb-tools/lint:
           name: lint
+          filters: *branch-filters
 
       - orb-tools/pack:
           name: pack
+          filters: *branch-filters
           requires:
             - lint
 
@@ -59,6 +75,7 @@ workflows:
           attach-workspace: true
           checkout: false
           orb-ref: "borb/zappa@dev:test-channel"
+          filters: *branch-filters
           requires:
             - pack
 
@@ -67,11 +84,13 @@ workflows:
           attach-workspace: true
           checkout: false
           orb-ref: "borb/zappa@dev:${CIRCLE_BRANCH}"
+          filters: *branch-filters
           requires:
             - pack
 
       - run-unit-tests:
           name: run-unit-tests
+          filters: *branch-filters
           requires:
             - publish-test-channel
 
@@ -79,24 +98,38 @@ workflows:
           name: trigger-integration-workflow
           ssh-fingerprints: "57:7b:eb:64:42:0c:30:9a:4d:12:29:57:0e:0e:13:3f"
           cleanup-tags: true
+          filters: *branch-filters
           requires:
             - run-unit-tests
 
   integration-tests:
     jobs:
+      - prepare-integration-workspace:
+          filters: *integration-filters
+
       - zappa/zappa-deploy:
           checkout: false
+          context: fake-aws-credentials
           stage: dev
+          machine_executor: true
           python_version: "3.7"
           filters: *integration-filters
           pre-steps:
-            - checkout
+            - attach_workspace:
+                at: "."
             - run:
-                name: move-to-test-simple
-                command: "cd tests/integration/test_simple"
+                name: install-pipenv
+                command: sudo pip install pipenv
             - run:
                 name: install-moto-interceptor
-                command: pipenv install
+                command: sudo pipenv install
             - run:
                 name: start-moto-interceptor
-                command: "nohup pipenv run moto-interceptor &"
+                command: |-
+                  sudo /etc/init.d/dnsmasq restart
+                  nohup sudo pipenv run moto-interceptor --intercept_method dnsmasq --target_regions us-west-2 1>nohup.out 2>nohup.out &
+                  sleep 3
+                  sudo /etc/init.d/dnsmasq restart
+                  cat nohup.out
+          requires:
+            - prepare-integration-workspace

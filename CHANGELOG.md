@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - New parameter for the `zappa-deploy` job: `checkout`
+- New parameter for the `zappa-deploy` job: `working_directory`
 
 ### Changed
 - Upgrade the pyyaml dev-dependency to the latest version.

@@ -12,6 +12,11 @@ parameters:
     default: true
     description: >
       Whether to check out the project.
+  machine_executor:
+    type: boolean
+    default: false
+    description:
+      Whether to use a machine executor instead of a docker executor.
   python_version:
     type: string
     default: "2.7"
@@ -34,10 +39,14 @@ parameters:
       Whether to disallow a new stage being deployed.
 
 executor:
-  name: python
+  name: python<<# parameters.machine_executor >>-machine<</ parameters.machine_executor >>
   version: << parameters.python_version >>
 
 steps:
+  - when:
+      condition: << parameters.machine_executor >>
+      steps:
+        - run: sudo pip install pipenv
   - when:
       condition: << parameters.checkout >>
       steps:

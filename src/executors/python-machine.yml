@@ -1,7 +1,5 @@
 description: >
-  Provision a Python docker executor.
-
-resource_class: small
+  Provision a machine executor.
 
 parameters:
   version:
@@ -10,5 +8,6 @@ parameters:
     description:
       The Python version to use in the executor.
 
-docker:
-  - image: circleci/python:<<parameters.version>>
+resource_class: small
+
+machine: true
