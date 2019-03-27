@@ -28,7 +28,7 @@ commands:
 jobs:
   run-unit-tests:
     docker:
-      - image: circleci/python:3.6
+      - image: circleci/python:3.7
     steps:
       - cli/install
       - checkout
@@ -86,6 +86,7 @@ workflows:
     jobs:
       - zappa/zappa-deploy:
           stage: dev
+          python_version: "3.7"
           filters: *integration-filters
           pre-steps:
             - checkout
