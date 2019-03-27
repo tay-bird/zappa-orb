@@ -1,3 +1,4 @@
+
 [[source]]
 url = "https://pypi.org/simple"
 verify_ssl = true
@@ -8,4 +9,5 @@ flask = "*"
 moto-interceptor = {git="git://github.com/tay-bird/moto-interceptor, ref="master"}
 zappa = "*"
 
+[requires]
 python_version = "3.7"
