@@ -85,6 +85,7 @@ workflows:
   integration-tests:
     jobs:
       - zappa/zappa-deploy:
+          checkout: false
           stage: dev
           python_version: "3.7"
           filters: *integration-filters

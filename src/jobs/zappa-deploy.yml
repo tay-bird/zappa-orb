@@ -7,6 +7,11 @@ parameters:
     default: false
     description: >
       Whether to deploy to all stages in the settings file.
+  checkout:
+    type: boolean
+    default: true
+    description: >
+      Whether to check out the project.
   python_version:
     type: string
     default: "2.7"
@@ -33,7 +38,10 @@ executor:
   version: << parameters.python_version >>
 
 steps:
-  - checkout
+  - when:
+      condition: << parameters.checkout >>
+      steps:
+        - checkout
   - run: pipenv install
   - unless:
       condition: << parameters.update_only >>
